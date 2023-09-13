@@ -233,6 +233,8 @@
 				navigationHelpButton: false,
 			});
 
+            var Lantmateritoken = "";
+
 			//variable for scene camera
 			var camera = viewer.scene.camera;
 			//Ta bort bakgrundslager
@@ -278,7 +280,7 @@
 
 			//Bakgrundskarta
             var topo = new Cesium.WebMapTileServiceImageryProvider({
-                url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"XXXXXXXXX"/?request=getcapabilities&service=wmts", //Byt till eget acess token, är öppen data från lantmäteriet
+                url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"+Lantmateritoken+"/?request=getcapabilities&service=wmts", //Byt till eget acess token i variabeln, är öppen data från lantmäteriet
                 layer: "topowebb",
                 style: "default",
                 format: "image/jpeg",
@@ -405,7 +407,7 @@
 						if (checkBoxtopo.checked == true) {
                             viewer.scene.imageryLayers.removeAll();
 							var topo = new Cesium.WebMapTileServiceImageryProvider({
-                                url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"XXXXXXXXX"/?request=getcapabilities&service=wmts", //Byt till eget acess token, är öppen data från lantmäteriet
+                                url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/" + Lantmateritoken +"/?request=getcapabilities&service=wmts", //Byt till eget acess token i variabeln, är öppen data från lantmäteriet
 								layer: "topowebb",
 								style: "default",
 								format: "image/jpeg",
@@ -422,7 +424,7 @@
 				if (checkBoxtoponed.checked == true) {
                     viewer.scene.imageryLayers.removeAll();
 					var toponedtonad = new Cesium.WebMapTileServiceImageryProvider({
-                        url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"XXXXXXXXX"/?request=getcapabilities&service=wmts", //Byt till eget acess token, är öppen data från lantmäteriet
+                        url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/" + Lantmateritoken +"/?request=getcapabilities&service=wmts", //Byt till eget acess token i variabeln, är öppen data från lantmäteriet
                         layer: "topowebb_nedtonad",
 						style: "default",
 						format: "image/jpeg",
