@@ -1,0 +1,605 @@
+﻿<html lang="sv-se">
+<head>
+	<meta charset="utf-8" name="description" content="3D Stadsmodell., width=device-width, initial-scale=1.0">
+	
+	<title>Umeå kommun</title>
+	
+
+	<script src="https://cesium.com/downloads/cesiumjs/releases/1.101/Build/Cesium/Cesium.js"></script>
+	<link href="https://cesium.com/downloads/cesiumjs/releases/1.101/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+	<div id="cesiumContainer" class="fullSize">
+		<div id="sliderImg"></div>
+
+	</div>
+
+	<div id="welcome" class="modal open">
+		<div>
+			<button class="close">&times;</button>
+			<p>Här kan du se Umeå Kommuns 3D-stadsmodell.</p>
+			<p>I kartan kan du välja mellan att navigera fritt eller att besöka förutbestämda platser.</p>
+			<button class="showMap">Visa kartan</button>
+			<button class="navigation">Läs mer om hur man navigerar</button>
+		</div>
+	</div>
+
+	<div id="navigation" class="modal">
+		<div>
+			<button class="close">&times;</button>
+			<h3>Navigera med musen</h3>
+			<ul>
+				<li>Drag och flytta vyn med vänster musknapp</li>
+				<li>Zooma in/ut med mushjulet alt. höger musknapp</li>
+				<li>Rotera vyn genom att klicka och drag med mushjulet</li>
+			</ul>
+			<h3>Kartknappar</h3>
+			<ul>
+				<li>Klicka på kompassen för att rikta blicken mot norr</li>
+				<li>Klicka på plus/minus för att zooma in/ut</li>
+				<li>Klicka på infoknappen för att öppna inforutan</li>
+				<li>Klicka på solen för att se hur skuggor faller</li>
+			</ul>
+			<button class="showMap">Visa kartan</button>
+		</div>
+	</div>
+
+
+	<div id="sidebarToggle"><button onclick="document.querySelector('#sidebar').classList.add('open'); this.classList.add('hide')">Meny</button></div>
+
+	<div id="sidebar">
+		<button onclick="document.querySelector('#sidebar').classList.remove('open'); document.querySelector('#sidebarToggle > button').classList.remove('hide');">&times;</button>
+		<br />
+		<br />
+		<button type="button" class="collapsible">Modeller</button> <!--Menyn för modellerna-->
+		<div class="content">
+			<ul>
+				<!--Knappar för att tända/släcka lager-->
+				<label class="switch">
+					<input type="checkbox" id="ALT3" onclick="BALT3T()">
+					<span class="slider round"></span>
+				</label>
+				<h6>Låga byggnader</h6>
+
+				<label class="switch">
+					<input type="checkbox" id="ALT4" onclick="BALT4T()">
+					<span class="slider round"></span>
+				</label>
+				<h6>Högre byggnader</h6>
+				<!--Knappar för att tända/släcka lager-->
+			</ul>
+
+		</div>
+
+		<button type="button" class="collapsible">Verktyg</button> <!--Menyn för verktyg-->
+		<div class="content">
+			<div class="tools">
+
+			</div>
+
+		</div>
+		<button type="button" class="collapsible">Besök Plats</button> <!--Menyn för förbestämda platser -->
+		<div class="content">
+			<ul>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(20.256296,63.817214,661.17),orientation: {heading: Cesium.Math.toRadians(20.57),pitch: Cesium.Math.toRadians(-32.90)}})">Centrum</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(20.235267,63.822212,692.79),orientation: {heading: Cesium.Math.toRadians(40.47),pitch: Cesium.Math.toRadians(-34.94)}})">Väst på stan</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.281750,
+			63.814993,
+			716.78
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(348.48),
+			pitch: Cesium.Math.toRadians(-37.60)
+		}})">Öst på stan</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.262673,
+			63.825066,
+			938.31
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(27.62),
+			pitch: Cesium.Math.toRadians(-35.90)
+		}})">Haga/Sandbacka</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.166785,
+			63.826218,
+			1138.27
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(59.83),
+			pitch: Cesium.Math.toRadians(-29.78)
+		}})">Backenområdet</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.183471,
+			63.803159,
+			1133.87
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(11.06),
+			pitch: Cesium.Math.toRadians(-29.78)
+		}})">Umåker</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.237965,
+			63.800197,
+			1123.97
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(18.35),
+			pitch: Cesium.Math.toRadians(-29.44)
+		}})">Teg</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.269939,
+			63.797992,
+			765.17
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(38.93),
+			pitch: Cesium.Math.toRadians(-32.84)
+		}})">Ön</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.322663,
+			63.789309,
+			748.77
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(343.80),
+			pitch: Cesium.Math.toRadians(-36.58)
+		}})">Carlshem</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.293674,
+			63.827678,
+			1031.13
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(147.03),
+			pitch: Cesium.Math.toRadians(-41.00)
+		}})">Sjukhuset</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.298935,
+			63.839408,
+			963.19
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(95.58),
+			pitch: Cesium.Math.toRadians(-35.21)
+		}})">Marie området</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.313794,
+			63.838494,
+			1077.07
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(6.99),
+			pitch: Cesium.Math.toRadians(-26.04)
+		}})">Ersboda</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			20.475593,
+			64.015635,
+			1170.54
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(10.01),
+			pitch: Cesium.Math.toRadians(-34.50)
+		}})">Bullmark</li>
+				<li onclick="camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(
+			19.892300,
+			63.642511,
+			763.39
+		),
+		orientation: {
+			heading: Cesium.Math.toRadians(144.39),
+			pitch: Cesium.Math.toRadians(-22.61)
+		}})">Hörnefors</li>
+			</ul>
+
+		</div> <!--Menyn för förbestämda platser -->
+
+		<button type="button" class="collapsible">Bakgrundskarta</button> <!--Menyn för Bakgrundskartor-->
+		<div class="content">
+			<!--Radiobuttons dvs endast en kan vara på åt gången-->
+			<label>
+				<input type="radio" id="topo" name="Bakgrundskartor" onclick="activatetopo()" checked>
+			</label>
+			<h4>Topografisk karta</h4>
+			<label>
+				<input type="radio" id="toponed" name="Bakgrundskartor" onclick="activatetoponedtonad()">
+			</label>
+			<h4>Nedtonad Topografisk karta</h4>
+
+		</div>  <!--Menyn för Bakgrundskartor-->
+
+		<img src="Umea_kommun_RGB.png" class="loggo"> <!--Kommunlogga-->
+
+	</div>
+
+		<script>
+			// Cesium.Ion.defaultAccessToken = ''; // Lägg in eget om tillgång till ION ska finnas
+			var viewer = new Cesium.Viewer('cesiumContainer', {
+				shadows: false,
+				geocoder: false,
+				enableLook: false,
+				enableTranslate: false,
+				animation: false,
+				timeline: false,
+				scene3DOnly: true,
+				homeButton: false,
+				baseLayerPicker: false,
+				fullscreenButton: false,
+				navigationHelpButton: false,
+			});
+
+			//variable for scene camera
+			var camera = viewer.scene.camera;
+			//Ta bort bakgrundslager
+			viewer.scene.imageryLayers.removeAll();
+
+			//remove moon
+			viewer.scene.moon.destroy();
+			viewer.scene.moon = undefined;
+
+			//Max-min zoom
+			viewer.scene.screenSpaceCameraController.maximumZoomDistance = 40000;
+			viewer.scene.screenSpaceCameraController.minimumZoomDistance = 50;
+
+			//Startplats för kameran
+			camera.setView({
+				destination: Cesium.Cartesian3.fromDegrees(
+					20.256315,
+					63.817562,
+					358.92
+				),
+				orientation: {
+					heading: Cesium.Math.toRadians(22.99),
+					pitch: Cesium.Math.toRadians(-21.79)
+				}
+			});
+
+			// stäng av alla bakgrundskartor om du vill starta utan Bing-Satelite
+			viewer.scene.imageryLayers.removeAll();
+
+			//Bakgrundsfärg globen
+			viewer.scene.globe.baseColor = Cesium.Color.BLACK;
+			
+			//Fotorealistsik modell lokalt lagrad "3D-Tiles"
+			/*
+			var fotor = viewer.scene.primitives.add(
+				new Cesium.Cesium3DTileset({
+					url: "../Tileset/Stadsmodell/tileset.json",
+					maximumScreenSpaceError: 2,
+					show: true,
+				})
+			);
+			*/
+
+			//Bakgrundskarta
+            var topo = new Cesium.WebMapTileServiceImageryProvider({
+                url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"XXXXXXXXX"/?request=getcapabilities&service=wmts", //Byt till eget acess token, är öppen data från lantmäteriet
+                layer: "topowebb",
+                style: "default",
+                format: "image/jpeg",
+                tileMatrixSetID: "3857",
+                maximumLevel: 20,
+                credit: "Lantmäteriet",
+            });
+            viewer.imageryLayers.addImageryProvider(topo);
+					
+			// Datalager lokalt i mappen Data
+
+			// Singel
+            var BALT3I = new Cesium.GeoJsonDataSource();          
+            var checkBoxALT3 = document.getElementById("ALT3");
+            function BALT3T() {
+                if (checkBoxALT3.checked == true) {
+                    viewer.dataSources.add(BALT3I);
+                    BALT3I.load('./Data/Qgis.geojson', {
+                        stroke: Cesium.Color.BLACK.withAlpha(0.5),
+                        fill: Cesium.Color.GAINSBORO,
+						strokeWidth: 2,
+                        clampToGround: false,
+                    });
+                }
+                else {
+                    viewer.dataSources.remove(BALT3I)                   
+                }
+            } // Singel
+			
+			//Dubbla datasett i samma knapp
+            var BALT4I = new Cesium.GeoJsonDataSource();
+            var BALT4B = new Cesium.GeoJsonDataSource();
+          
+            var checkBoxALT4 = document.getElementById("ALT4");
+            function BALT4T() {
+                if (checkBoxALT4.checked == true) {
+                    viewer.dataSources.add(BALT4I);
+                    BALT4I.load('./Data/Qgis2.geojson', {
+                        stroke: Cesium.Color.BLACK.withAlpha(0.5),
+                        fill: Cesium.Color.GAINSBORO,
+						strokeWidth: 2,
+						clampToGround:false,
+                    });
+                    viewer.dataSources.add(BALT4B);
+                    BALT4B.load('./Data/Qgis3.geojson', {
+                        stroke: Cesium.Color.BLACK.withAlpha(0.5),
+                        fill: Cesium.Color.GRAY,
+						strokeWidth: 2,
+                        clampToGround: false,
+                    });
+                }
+                else {
+                    viewer.dataSources.remove(BALT4I)
+                    viewer.dataSources.remove(BALT4B)
+                }
+            } //Dubbla datasett i samma knapp
+
+			// Datalager Slut
+
+
+			//Verktygsknappar som genereras av JS och hamnar i huvudrutan till höger
+			var info = document.createElement('button');
+			info.classList.add('info', 'cesium-button', 'cesium-toolbar-button',);
+            info.innerHTML = '<img src="Knappar/i.png" width="12px">';
+			info.addEventListener("click", function () {
+				document.querySelector("#welcome").classList.add('open');
+			});
+			document.querySelector('.cesium-viewer-toolbar').prepend(info);
+
+			var zoomOut = document.createElement('button');
+			zoomOut.classList.add('zoomIn', 'cesium-button', 'cesium-toolbar-button',);
+			zoomOut.innerHTML = '-';
+			zoomOut.addEventListener("click", function () {
+				viewer.scene.camera.zoomOut(150)
+			});
+			document.querySelector('.cesium-viewer-toolbar').prepend(zoomOut);
+
+			var zoomIn = document.createElement('button');
+			zoomIn.classList.add('zoomIn', 'cesium-button', 'cesium-toolbar-button',);
+			zoomIn.innerHTML = '+';
+			zoomIn.addEventListener("click", function () {
+				viewer.scene.camera.zoomIn(150)
+			});
+			document.querySelector('.cesium-viewer-toolbar').prepend(zoomIn);
+
+			var cartographic = new Cesium.Cartographic();
+			var compass = document.createElement('button');
+			compass.classList.add('compass', 'cesium-button', 'cesium-toolbar-button',);
+            compass.innerHTML = '<img src="Knappar/compass.png" width="16px">';
+			compass.addEventListener("click", function () {
+				viewer.scene.mapProjection.ellipsoid.cartesianToCartographic(camera.positionWC, cartographic);
+				camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(cartographic.longitude).toFixed(6), Cesium.Math.toDegrees(cartographic.latitude).toFixed(6), viewer.camera._positionCartographic.height), orientation: { heading: Cesium.Math.toRadians(360), pitch: Cesium.Math.toRadians(Cesium.Math.toDegrees(camera.pitch).toFixed(2)) } });
+			});
+			document.querySelector('.cesium-viewer-toolbar').prepend(compass);
+			//Verktygsknappar som genereras av JS och hamnar i huvudrutan till höger
+
+
+			//Verktygsknappar som genereras av JS och hamnar i Verktygsmenyn
+            var measure = document.createElement('button');
+            let counter = 0;
+            measure.classList.add('measure', 'cesium-button', 'cesium-toolbar-button',);
+            measure.innerHTML = '<img src="./Knappar/measure.png" width="20px">';
+            measure.addEventListener("click", function () {
+                if (counter === 0) {
+                    mata();
+                    measure.innerHTML = '<img src="./Knappar/greencheck.png" width="25px">';
+                    console.log(counter);
+                    counter++;
+                }
+                else {
+                    mata2();
+                    measure.innerHTML = '<img src="./Knappar/measure.png" width="25px">';
+                    console.log(counter);
+                    counter--;
+                }
+            });
+            document.querySelector(".tools").prepend(measure);
+			//Verktygsknappar som genereras av JS och hamnar i Verktygsmenyn
+
+
+			// Bakgrundskartor
+            var checkBoxtopo = document.getElementById("topo");
+					function activatetopo() {
+						if (checkBoxtopo.checked == true) {
+                            viewer.scene.imageryLayers.removeAll();
+							var topo = new Cesium.WebMapTileServiceImageryProvider({
+                                url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"XXXXXXXXX"/?request=getcapabilities&service=wmts", //Byt till eget acess token, är öppen data från lantmäteriet
+								layer: "topowebb",
+								style: "default",
+								format: "image/jpeg",
+								tileMatrixSetID: "3857",
+								maximumLevel: 20,
+								credit: "Lantmäteriet",
+							});
+							viewer.imageryLayers.addImageryProvider(topo);
+						}
+						}
+          
+            var checkBoxtoponed = document.getElementById("toponed");
+			function activatetoponedtonad() {
+				if (checkBoxtoponed.checked == true) {
+                    viewer.scene.imageryLayers.removeAll();
+					var toponedtonad = new Cesium.WebMapTileServiceImageryProvider({
+                        url: "https://api.lantmateriet.se/open/topowebb-ccby/v1/wmts/open/topowebb-ccby/v1/wmts/token/"XXXXXXXXX"/?request=getcapabilities&service=wmts", //Byt till eget acess token, är öppen data från lantmäteriet
+                        layer: "topowebb_nedtonad",
+						style: "default",
+						format: "image/jpeg",
+						tileMatrixSetID: "3857",
+						maximumLevel: 20,
+						credit: "Lantmäteriet",
+					});
+                    viewer.imageryLayers.addImageryProvider(toponedtonad);
+				}
+			}
+			// Bakgrundskartor slut
+
+			//Funktion för skuggstudien
+			viewer.clock.onTick.addEventListener(function (clock) {
+				compass.querySelector('img').style.transform = 'rotate(-' + Cesium.Math.toDegrees(camera.heading).toFixed(2) + 'deg)';
+			});
+
+			//shadow settings
+			var shadowMap = viewer.shadowMap;
+			shadowMap.maximumDistance = 4000;
+			shadowMap.size = 4096;
+			shadowMap.darkness = 0.6;
+
+			//attach light to camera
+			function cameraLight() {
+				viewer.scene.light = new Cesium.DirectionalLight({
+					direction: new Cesium.Cartesian3()
+				});
+				viewer.scene.preRender.addEventListener(function (scene, time) {
+					viewer.scene.light.direction = camera.directionWC;
+				});
+			}
+			onload = cameraLight;
+
+			//timedate
+			var timeDateNav = document.createElement('div');
+			timeDateNav.setAttribute('id', 'timeDate');
+			timeDateNav.innerHTML = `<button id="timeDateToggle" class="cesium-button cesium-toolbar-button cesium-home-button">
+			<img src="Knappar/sun.png" width="20"></button>
+			<div>
+			<div class="list"><ul>
+			<li><span id="monthOutput"></span><input type="range" min="1" max="12" value="6" class="timeslider" id="monthSlider"></li>
+			<li><span id="dayOutput"></span><input type="range" min="1" max="31" value="15" class="timeslider" id="daySlider"></li>
+			<li><span id="hourOutput"></span><input type="range" min="1" max="24" value="10" class="timeslider" id="hourSlider"></li>
+			</ul></div>
+			</div>`;
+            document.querySelector(".tools").appendChild(timeDateNav);
+
+
+			//timeDateToggle
+			var timeDateToggle = document.getElementById("timeDateToggle");
+			timeDateToggle.addEventListener("click", function () {
+				timeDateToggle.parentNode.classList.toggle('active');
+				if (timeDateToggle.parentNode.classList.contains("active")) {
+					viewer.scene.light = new Cesium.SunLight();
+					viewer.shadows = Cesium.ShadowMode.ENABLED
+					updateDate()
+				} else {
+					cameraLight();
+					viewer.shadows = Cesium.ShadowMode.DISABLED
+				}
+
+			}, false);
+			//MONTH SLIDER
+			var monthSlider = document.getElementById("monthSlider");
+			var monthOutput = document.getElementById("monthOutput");
+			var months = ["0", "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
+			//set month on startup
+			monthOutput.innerText = months[parseInt(monthSlider.value, 10)];
+			//change month with slider
+			monthSlider.oninput = function () {
+				monthOutput.innerText = months[parseInt(monthSlider.value, 10)];
+				updateDate();
+			}
+			function month() {
+				if (monthSlider.value < 10) {
+					i = '0' + monthSlider.value;
+					return i;
+				} else {
+					return monthSlider.value;
+				}
+			}
+			//DAY SLIDER
+			var daySlider = document.getElementById("daySlider");
+			var dayOutput = document.getElementById("dayOutput");
+			//set day on startup
+			dayOutput.innerText = day();
+			//change day with slider
+			daySlider.oninput = function () {
+				dayOutput.innerText = day();
+				updateDate();
+			}
+			function day() {
+				if (daySlider.value < 10) {
+					i = '0' + daySlider.value;
+					return i;
+				} else {
+					return daySlider.value;
+				}
+			}
+			//HOUR SLIDER
+			var hourSlider = document.getElementById("hourSlider");
+			var hourOutput = document.getElementById("hourOutput");
+			//set hour on startup
+			hourOutput.innerText = hour() + ':00';
+			//change hour with slider
+			hourSlider.oninput = function () {
+				hourOutput.innerText = hour() + ':00';
+				updateDate();
+			}
+			function hour() {
+				if (hourSlider.value < 10) {
+					i = '0' + hourSlider.value;
+					return i;
+				} else {
+					return hourSlider.value;
+				}
+			}
+
+            let year = new Date().getFullYear();
+            console.log(year);
+
+			//update date
+			function updateDate() {
+                if (monthSlider.value >= 4 && monthSlider.value < 11 ) {
+					viewer.clockViewModel.currentTime = Cesium.JulianDate.fromIso8601(year+'-' + month() + '-' + day() + 'T' + (parseInt(hour())+2) + '00:00Z'); // +2 = in i vår tidszon sommartid
+					//console.log(viewer.clockViewModel.currentTime + "som");              
+				} else {
+                    viewer.clockViewModel.currentTime = Cesium.JulianDate.fromIso8601(year +'-' + month() + '-' + day() + 'T' + (parseInt(hour()) + 1) + '00:00Z'); // +1 = in i vår tidszon vintertid
+					//console.log(viewer.clockViewModel.currentTime + "vint");                  
+				}
+			}
+
+
+
+			function closeModal() {
+				if (document.querySelector("#welcome").classList.contains('open')) {
+					document.querySelector("#welcome").classList.remove('open')
+				}
+				if (document.querySelector("#navigation").classList.contains('open')) {
+					document.querySelector("#navigation").classList.remove('open')
+				}
+			}
+
+			document.querySelectorAll('.modal button').forEach(item => {
+				item.addEventListener('click', event => {
+					closeModal()
+				})
+			})
+			document.querySelector("#welcome .navigation").addEventListener("click", function () {
+				document.querySelector("#navigation").classList.add('open');
+			});
+
+			
+
+
+			//Funktion för skuggstudien
+
+			//collapsibles in Verktyg
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+		</script>
+
+		<script src="./Js/Slidez.js" type="text/javascript"></script>
+		<script src="./Js/Measure.js" type="text/javascript"></script>
+
+</body>
+</html>
