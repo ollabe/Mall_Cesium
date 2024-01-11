@@ -1,4 +1,4 @@
-﻿<html lang="sv-se">
+<html lang="sv-se">
 <head>
 	<meta charset="utf-8" name="description" content="3D Stadsmodell., width=device-width, initial-scale=1.0">
 	
@@ -58,18 +58,28 @@
 		<button type="button" class="collapsible">Modeller</button> <!--Menyn för modellerna-->
 		<div class="content">
 			<ul>
-				<!--Knappar för att tända/släcka lager-->
-				<label class="switch">
-					<input type="checkbox" id="ALT3" onclick="BALT3T()">
-					<span class="slider round"></span>
-				</label>
-				<h6>Låga byggnader</h6>
+				<ul>
+					<li> <input type="radio" name="browser" onclick="VBT()">3D tiles Färgade byggnader + Tak </li>
+					<li> <input type="radio" name="browser" onclick="VBS()">Släck 3DTiles </li>
+				</ul>
 
-				<label class="switch">
-					<input type="checkbox" id="ALT4" onclick="BALT4T()">
-					<span class="slider round"></span>
-				</label>
-				<h6>Högre byggnader</h6>
+				<ul>
+					<!--Knappar för att tända/släcka lager-->
+					<label class="switch">
+						<input type="checkbox" id="ALT3" onclick="BALT3T()">
+						<span class="slider round"></span>
+					</label>
+					<h6>Tak Geojson</h6>
+
+					<label class="switch">
+						<input type="checkbox" id="ALT4" onclick="BALT4T()">
+						<span class="slider round"></span>
+					</label>
+					<h6>Boxar Geojson</h6>
+					<!--Knappar för att tända/släcka lager-->
+				</ul>
+
+
 				<!--Knappar för att tända/släcka lager-->
 			</ul>
 
@@ -236,9 +246,7 @@
             var Lantmateritoken = "";
 
 			//variable for scene camera
-			var camera = viewer.scene.camera;
-			//Ta bort bakgrundslager
-			viewer.scene.imageryLayers.removeAll();
+			var camera = viewer.scene.camera;	
 
 			//remove moon
 			viewer.scene.moon.destroy();
@@ -261,7 +269,7 @@
 				}
 			});
 
-			// stäng av alla bakgrundskartor om du vill starta utan Bing-Satelite
+			// stäng av alla bakgrundskartor om du vill starta utan Bing-Satelite, för att läsa in den krävs ION-token
 			viewer.scene.imageryLayers.removeAll();
 
 			//Bakgrundsfärg globen
@@ -288,7 +296,51 @@
                 maximumLevel: 20,
                 credit: "Lantmäteriet",
             });
-            viewer.imageryLayers.addImageryProvider(topo);
+			viewer.imageryLayers.addImageryProvider(topo);
+
+
+			//3DTiles Lokalt i Data mappen, med färgstyrning per attribut
+
+            var VB = viewer.scene.primitives.add(
+                new Cesium.Cesium3DTileset({
+                    url: "./Data/Tak/tileset.json",
+                    maximumScreenSpaceError: 2,
+                    show: false,
+                })
+            );
+
+            var KB = viewer.scene.primitives.add(
+                new Cesium.Cesium3DTileset({
+                    url: "./Data/Byggnader/tileset.json",
+                    maximumScreenSpaceError: 2,
+                    show: false,
+                })
+            );
+
+            KB.style = new Cesium.Cesium3DTileStyle({
+                color: {
+                    conditions: [                                    
+                        ['${Typ} === "Bostad"', 'color("CHOCOLATE")'],
+                        ['${Typ} === "Industri"', 'color("DARKGRAY")'],
+                        ['${Typ} === "Komplement"', 'color("DARKSALMON")'],
+                        ['${Typ} === "Övrigt"', 'color("PERU")'],
+                        ['true', 'color("TAN")'] //Alla andra
+                    ]
+                },
+            });
+
+
+            function VBT() {
+                VB.show = true;
+                KB.show = true;
+            }
+
+            function VBS() {
+                VB.show = false;
+                KB.show = false;
+            }
+
+
 					
 			// Datalager lokalt i mappen Data
 
@@ -298,7 +350,7 @@
             function BALT3T() {
                 if (checkBoxALT3.checked == true) {
                     viewer.dataSources.add(BALT3I);
-                    BALT3I.load('./Data/Qgis.geojson', {
+                    BALT3I.load('./Data/TAK.geojson', {
                         stroke: Cesium.Color.BLACK.withAlpha(0.5),
                         fill: Cesium.Color.GAINSBORO,
 						strokeWidth: 2,
@@ -310,7 +362,7 @@
                 }
             } // Singel
 			
-			//Dubbla datasett i samma knapp
+			//Dubbla datasett i samma knapp Boxar + våningsdelare
             var BALT4I = new Cesium.GeoJsonDataSource();
             var BALT4B = new Cesium.GeoJsonDataSource();
           
@@ -318,14 +370,14 @@
             function BALT4T() {
                 if (checkBoxALT4.checked == true) {
                     viewer.dataSources.add(BALT4I);
-                    BALT4I.load('./Data/Qgis2.geojson', {
+                    BALT4I.load('./Data/Byggnader.geojson', {
                         stroke: Cesium.Color.BLACK.withAlpha(0.5),
                         fill: Cesium.Color.GAINSBORO,
 						strokeWidth: 2,
 						clampToGround:false,
                     });
                     viewer.dataSources.add(BALT4B);
-                    BALT4B.load('./Data/Qgis3.geojson', {
+                    BALT4B.load('./Data/Vaningsdelare.geojson', {
                         stroke: Cesium.Color.BLACK.withAlpha(0.5),
                         fill: Cesium.Color.GRAY,
 						strokeWidth: 2,
